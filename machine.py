@@ -25,4 +25,24 @@ class Machine:
                         current_pattern.pop()
 
         generate_cut_patterns(0, 1)
+
+        to_remove = self.filter_cut_patterns()
+
+        for combination in to_remove:
+            self.cut_patterns.remove(combination)
+
         return self.cut_patterns
+
+    def filter_cut_patterns(self):
+        min_piece = min(self.pieces_and_qty)[0]
+
+        to_remove = []
+
+        for combination in self.cut_patterns:
+            total = sum(combination)
+            waste = self.bar - total
+
+            if waste >= min_piece:
+                to_remove.append(combination)
+
+        return to_remove
