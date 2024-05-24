@@ -1,5 +1,6 @@
 from machine import Machine
 
+
 def read_data(filename):
     data = []
     with open(filename, "r") as file:
@@ -10,7 +11,8 @@ def read_data(filename):
 
 
 if __name__ == '__main__':
-    data = read_data("input.txt")
+    operator = Machine(read_data("input.txt"))
+    cut_patterns = operator.get_cut_patterns()
 
-    operator = Machine(data)
-    print(operator.get_cut_patterns())
+    for pattern in cut_patterns:
+        print(pattern.arrayPieces, pattern.waste)

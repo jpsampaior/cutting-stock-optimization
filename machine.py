@@ -1,3 +1,6 @@
+from cut_pattern import CutPattern
+
+
 class Machine:
     def __init__(self, data):
         self.bar = int(data[0][0])
@@ -14,7 +17,9 @@ class Machine:
 
         def generate_cut_patterns(index, multiplier):
             if index == self.num_of_pieces:
-                self.cut_patterns.append(current_pattern[:])
+                total = sum(current_pattern)
+                waste = self.bar - total
+                self.cut_patterns.append(CutPattern(current_pattern[:], waste))
                 return
             for i in range(self.pieces_and_qty[index][0] * multiplier + 1):
                 if sum(current_pattern) + i * self.pieces_and_qty[index][0] <= self.bar:
@@ -38,11 +43,8 @@ class Machine:
 
         to_remove = []
 
-        for combination in self.cut_patterns:
-            total = sum(combination)
-            waste = self.bar - total
-
-            if waste >= min_piece:
-                to_remove.append(combination)
+        for pattern in self.cut_patterns:
+            if pattern.waste >= min_piece:
+                to_remove.append(pattern)
 
         return to_remove
