@@ -15,4 +15,4 @@ if __name__ == '__main__':
     cut_patterns = operator.get_cut_patterns()
 
     for pattern in cut_patterns:
-        print(pattern.arrayPieces, pattern.waste)
+        print(f"Corte: {pattern.arrayPieces}\nDesperdício: {pattern.waste}\n")
