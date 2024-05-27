@@ -14,5 +14,7 @@ if __name__ == '__main__':
     operator = Machine(read_data("input.txt"))
     cut_patterns = operator.get_cut_patterns()
 
-    for pattern in cut_patterns:
-        print(f"Corte: {pattern.arrayPieces}\nDesperdício: {pattern.waste}\n")
+    operator.set_decision_variables()
+    operator.set_constraints()
+    operator.set_objective()
+    operator.print_optimal_solution()
