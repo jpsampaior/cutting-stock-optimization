@@ -11,29 +11,29 @@ class Machine:
         self.infinity = self.solver.Infinity()
         self.objective = self.solver.Objective()
         self.x = []
+        self.current_pattern = []
 
         for i in range(int(self.num_of_pieces)):
             self.pieces_and_qty.append((int(data[i + 1][0]), int(data[i + 1][1])))
 
+    def generate_cut_patterns(self, index, multiplier):
+        if index == self.num_of_pieces:
+            total = sum(self.current_pattern)
+            waste = self.bar - total
+            self.cut_patterns.append(CutPattern(self.current_pattern[:], waste))
+            return
+        for i in range(self.pieces_and_qty[index][0] * multiplier + 1):
+            if sum(self.current_pattern) + i * self.pieces_and_qty[index][0] <= self.bar:
+                for j in range(i):
+                    self.current_pattern.append(self.pieces_and_qty[index][0])
+                self.generate_cut_patterns(index + 1, multiplier)
+                for j in range(i):
+                    self.current_pattern.pop()
+
     def get_cut_patterns(self):
         self.cut_patterns = []
-        current_pattern = []
 
-        def generate_cut_patterns(index, multiplier):
-            if index == self.num_of_pieces:
-                total = sum(current_pattern)
-                waste = self.bar - total
-                self.cut_patterns.append(CutPattern(current_pattern[:], waste))
-                return
-            for i in range(self.pieces_and_qty[index][0] * multiplier + 1):
-                if sum(current_pattern) + i * self.pieces_and_qty[index][0] <= self.bar:
-                    for j in range(i):
-                        current_pattern.append(self.pieces_and_qty[index][0])
-                    generate_cut_patterns(index + 1, multiplier)
-                    for j in range(i):
-                        current_pattern.pop()
-
-        generate_cut_patterns(0, 1)
+        self.generate_cut_patterns(0, 1)
 
         to_remove = self.filter_cut_patterns()
 
@@ -76,7 +76,9 @@ class Machine:
             print('Política de corte: \n')
             for i in range(len(self.x)):
                 pattern = ' + '.join(map(str, self.cut_patterns[i].arrayPieces))
-                print(f'Corte: {pattern}\nDesperdício: {self.cut_patterns[i].waste}\nQuantidade: {int(self.x[i].solution_value())}\n')
+                print(f'Corte: {pattern}\n'
+                      f'Desperdício: {self.cut_patterns[i].waste}\n'
+                      f'Quantidade: {int(self.x[i].solution_value())}\n')
 
             print(f"\nDesperdício total: {int(self.solver.Objective().Value())}")
         else:
