@@ -22,6 +22,7 @@ class Machine:
             waste = self.bar - total
             self.cut_patterns.append(CutPattern(self.current_pattern[:], waste))
             return
+
         for i in range(self.pieces_and_qty[index][0] * multiplier + 1):
             if sum(self.current_pattern) + i * self.pieces_and_qty[index][0] <= self.bar:
                 for j in range(i):
